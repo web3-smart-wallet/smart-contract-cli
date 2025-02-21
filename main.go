@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/joho/godotenv"
 	constant "github.com/web3-smart-wallet/smart-contract-cli/lib/constant"
 	"github.com/web3-smart-wallet/smart-contract-cli/lib/views"
 )
@@ -278,8 +279,21 @@ func (m model) View() string {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file, please make sure it exists")
+		os.Exit(1)
+	}
+
+	constant.Password = os.Getenv("PASSWORD")
+	// check if password is set
+	if len(constant.Password) == 0 {
+		fmt.Println("Password is not set, please set it in the .env file")
+		os.Exit(1)
+	}
+
 	p := tea.NewProgram(initialModel())
-	_, err := p.Run()
+	_, err = p.Run()
 	if err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)
 		os.Exit(1)

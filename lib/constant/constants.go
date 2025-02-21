@@ -12,12 +12,12 @@ const (
 )
 
 // Common constants
-const (
-	URLPattern     = `^(http|https)://[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=]+$` // URL validation pattern
-	Password       = "123456"
-	MaxNFTIDLength = 10  // Maximum NFT ID length
-	MaxURLLength   = 255 // Maximum URL length
-)
+// URL validation pattern
+var Password = ""
+
+const URLPattern = `^(http|https)://[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=]+$`
+const MaxNFTIDLength = 10 // Maximum NFT ID length
+const MaxURLLength = 255  // Maximum URL length
 
 // Menu options
 var (
@@ -37,7 +37,7 @@ const (
 	CursorInactive = " "
 	InputCursor    = "_"
 	Separator      = "--------------"
-	
+
 	// Key commands
 	KeyCtrlC     = "ctrl+c"
 	KeyEsc       = "esc"
@@ -53,20 +53,20 @@ const (
 	SuccessPrefix = "✅ "
 
 	// Page titles and headers
-	PasswordPageTitle     = "请输入密码:"
-	MenuPageTitle        = "请选择操作:"
-	DeployPageTitle      = "部署合约页面"
-	MintNFTPageTitle     = "Mint NFT 页面"
-	AirdropPageTitle     = "空投 NFT 页面"
-	UploadPageTitle      = "上传文件页面"
-	CheckTotalPageTitle  = "查看 NFT 总量页面"
+	PasswordPageTitle   = "请输入密码:"
+	MenuPageTitle       = "请选择操作:"
+	DeployPageTitle     = "部署合约页面"
+	MintNFTPageTitle    = "Mint NFT 页面"
+	AirdropPageTitle    = "空投 NFT 页面"
+	UploadPageTitle     = "上传文件页面"
+	CheckTotalPageTitle = "查看 NFT 总量页面"
 
 	// Common UI elements
-	MainMenuFooter     = "主菜单."
-	ExitMessage        = "按 Ctrl+C 退出程序."
-	BackToMenuMessage  = "按 ESC 返回主菜单"
-	EnterToContinue    = "按 Enter 继续"
-	
+	MainMenuFooter    = "主菜单."
+	ExitMessage       = "按 Ctrl+C 退出程序."
+	BackToMenuMessage = "按 ESC 返回主菜单"
+	EnterToContinue   = "按 Enter 继续"
+
 	// Error messages
 	EmptyNFTIDError    = "NFT ID 不能为空"
 	LongNFTIDError     = "NFT ID 太长"
@@ -81,14 +81,14 @@ const (
 const (
 	LoadingMessage     = "正在处理...\n\n"
 	UnknownPageMessage = "未知页面\n"
-	
+
 	// Input prompts
-	NFTInputPrompt     = "请输入要空投的 NFT 编号：\n"
-	GraphURLPrompt     = "请输入 Graph URL：\n"
-	NFTIDLabel         = "NFT 编号: "
-	
+	NFTInputPrompt = "请输入要空投的 NFT 编号：\n"
+	GraphURLPrompt = "请输入 Graph URL：\n"
+	NFTIDLabel     = "NFT 编号: "
+
 	// Navigation messages
-	BackToPrevious     = "按 ESC 返回上一页"
-	ReturnToNFTInput   = "按 ESC 重新输入 NFT 编号"
-	ConfirmAirdrop     = "按 Enter 确认空投"
-) 
+	BackToPrevious   = "按 ESC 返回上一页"
+	ReturnToNFTInput = "按 ESC 重新输入 NFT 编号"
+	ConfirmAirdrop   = "按 Enter 确认空投"
+)
