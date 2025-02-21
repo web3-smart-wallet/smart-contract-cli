@@ -2,12 +2,13 @@ package views
 
 import (
 	"fmt"
+
 	constant "github.com/web3-smart-wallet/smart-contract-cli/lib/constant"
 )
 
 // DeployView renders the deploy menu page
 func DeployView(deployChoices []string, deployCursor int) string {
-	s := constant.DeployPageTitle + "\n" + constant.Separator + "\n"
+	s := constant.DeployPageTitle + "\n" + string(constant.Separator) + "\n"
 
 	for i, choice := range deployChoices {
 		cursor := constant.CursorInactive
@@ -32,4 +33,4 @@ Mint NFT 页面
 按 ESC 返回主菜单
 按 Ctrl+C 退出程序
 `
-} 
+}

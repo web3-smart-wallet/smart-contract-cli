@@ -24,14 +24,6 @@ const (
 	checkTotalPage
 )
 
-// 其他常见常量定义
-const (
-	urlPattern     = `^(http|https)://[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=]+$` // 改进URL验证模式
-	password       = "123456"
-	maxNFTIDLength = 10  // NFT ID最大长度
-	maxURLLength   = 255 // URL最大长度
-)
-
 // 在文件开头添加自定义消息类型
 type airdropMsg struct {
 	nftID  string
@@ -108,8 +100,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		m.errorMessage = ""
 		m.successMessage = ""
-
-		switch msg.String() {
+		key := constant.KeyboardKey(msg.String())
+		switch key {
 		case constant.KeyCtrlC:
 			return m, tea.Quit
 		case constant.KeyEsc:
@@ -180,7 +172,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							return errorMsg{err: fmt.Errorf(constant.EmptyNFTIDError)}
 						}
 					}
-					if len(m.nftInput) > maxNFTIDLength {
+					if len(m.nftInput) > constant.MaxNFTIDLength {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.LongNFTIDError)}
 						}
@@ -194,12 +186,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.EmptyURLError)}
 						}
-					} else if len(m.graphURL) > maxURLLength {
+					} else if len(m.graphURL) > constant.MaxURLLength {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.LongURLError)}
 						}
 					}
-					matched, _ := regexp.MatchString(urlPattern, m.graphURL)
+					matched, _ := regexp.MatchString(constant.URLPattern, m.graphURL)
 					if !matched {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.InvalidURLError)}

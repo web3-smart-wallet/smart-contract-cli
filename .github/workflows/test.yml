@@ -30,7 +30,7 @@ jobs:
           version: 10
 
       - name: Install dependencies
-        run: pnpm i
+        run: pnpm i && pnpm hardhat compile
 
       - name: Start Hardhat node
         run: |

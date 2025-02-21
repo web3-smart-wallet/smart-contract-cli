@@ -31,20 +31,22 @@ const (
 	URLInputMode = "url"
 )
 
+type KeyboardKey string
+
 // UI Controls
 const (
-	CursorActive   = ">"
-	CursorInactive = " "
-	InputCursor    = "_"
-	Separator      = "--------------"
+	CursorActive   KeyboardKey = ">"
+	CursorInactive KeyboardKey = " "
+	InputCursor    KeyboardKey = "_"
+	Separator      KeyboardKey = "--------------"
 
 	// Key commands
-	KeyCtrlC     = "ctrl+c"
-	KeyEsc       = "esc"
-	KeyUp        = "up"
-	KeyDown      = "down"
-	KeyBackspace = "backspace"
-	KeyEnter     = "enter"
+	KeyCtrlC     KeyboardKey = "ctrl+c"
+	KeyEsc       KeyboardKey = "esc"
+	KeyUp        KeyboardKey = "up"
+	KeyDown      KeyboardKey = "down"
+	KeyBackspace KeyboardKey = "backspace"
+	KeyEnter     KeyboardKey = "enter"
 )
 
 // UI Messages
