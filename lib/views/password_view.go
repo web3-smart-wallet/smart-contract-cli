@@ -14,4 +14,4 @@ func PasswordView(password string) string {
 	s += "\n\n按 Enter 确认\n"
 	s += "按 Ctrl+C 退出程序\n"
 	return s
-} 
+}
