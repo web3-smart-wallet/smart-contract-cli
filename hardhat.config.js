@@ -7,8 +7,9 @@ module.exports = {
     hardhat: {
       mining: {
         auto: true,
-        interval: 0
-      }
-    }
-  }
+        interval: 0,
+      },
+      hostname: "0.0.0.0",
+    },
+  },
 };
