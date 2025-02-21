@@ -2,16 +2,61 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/joho/godotenv"
 	constant "github.com/web3-smart-wallet/smart-contract-cli/lib/constant"
 	"github.com/web3-smart-wallet/smart-contract-cli/lib/views"
 )
+
+// Logger represents a custom logger that writes to both file and stdout
+type Logger struct {
+	file   *os.File
+	logger *log.Logger
+}
+
+// NewLogger creates a new logger that writes to file only
+func NewLogger() (*Logger, error) {
+	// Create logs directory if it doesn't exist
+	logsDir := "logs"
+	if err := os.MkdirAll(logsDir, 0755); err != nil {
+		return nil, fmt.Errorf("failed to create logs directory: %v", err)
+	}
+
+	// Create log file with timestamp in name
+	timestamp := time.Now().Format("2006-01-02")
+	logFile := filepath.Join(logsDir, fmt.Sprintf("app_%s.log", timestamp))
+
+	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open log file: %v", err)
+	}
+
+	// Create logger that only writes to file
+	logger := log.New(file, "", log.Ldate|log.Ltime)
+
+	return &Logger{
+		file:   file,
+		logger: logger,
+	}, nil
+}
+
+// Log writes a message to the log
+func (l *Logger) Log(level, message string) {
+	l.logger.Printf("[%s] %s", level, message)
+}
+
+// Close closes the log file
+func (l *Logger) Close() error {
+	return l.file.Close()
+}
 
 // 添加页面状态常量
 const (
@@ -56,9 +101,16 @@ type model struct {
 	errorMessage   string   // 错误消息
 	successMessage string   // 成功消息
 	loading        bool     // 加载状态
+	logger         *Logger
 }
 
 func initialModel() model {
+	logger, err := NewLogger()
+	if err != nil {
+		fmt.Printf("Failed to create logger: %v\n", err)
+		os.Exit(1)
+	}
+
 	return model{
 		choices:        constant.MainMenuChoices,
 		cursor:         0,
@@ -75,21 +127,27 @@ func initialModel() model {
 		errorMessage:   "",
 		successMessage: "",
 		loading:        false,
+		logger:         logger,
 	}
 }
+
+// logger
 
 func (m model) Init() tea.Cmd {
 	return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
 	switch msg := msg.(type) {
 	case errorMsg:
 		m.errorMessage = msg.err.Error()
+		m.logger.Log("ERROR", msg.err.Error())
 		return m, nil
 
 	case successMsg:
 		m.successMessage = msg.message
+		m.logger.Log("INFO", msg.message)
 		return m, nil
 
 	case airdropMsg:
@@ -182,6 +240,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 
 				if m.inputMode == constant.URLInputMode {
+					m.logger.Log("INFO", fmt.Sprintf("graphURL: %s", m.graphURL))
 					if len(m.graphURL) == 0 {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.EmptyURLError)}
@@ -252,22 +311,31 @@ func (m model) View() string {
 
 	switch m.currentPage {
 	case constant.PasswordPage:
-		return views.PasswordView(m.password)
+		view := views.PasswordView(m.password)
+		s.WriteString(view)
 	case constant.MenuPage:
-		return views.MenuView(m.choices, m.cursor)
+		view := views.MenuView(m.choices, m.cursor)
+		s.WriteString(view)
 	case constant.DeployPage:
-		return views.DeployView(m.deployChoices, m.deployCursor)
+		view := views.DeployView(m.deployChoices, m.deployCursor)
+		s.WriteString(view)
 	case constant.DeployContractPage:
-		return views.DeployContractView()
+		view := views.DeployContractView()
+		s.WriteString(view)
 	case constant.AirdropPage:
-		return views.AirdropView(m.inputMode, m.nftInput, m.graphURL)
+		view := views.AirdropView(m.inputMode, m.nftInput, m.graphURL)
+		s.WriteString(view)
 	case constant.UpLoadPage:
-		return views.UploadView()
+		view := views.UploadView()
+		s.WriteString(view)
 	case constant.CheckTotalPage:
-		return views.CheckTotalView()
+		view := views.CheckTotalView()
+		s.WriteString(view)
 	default:
 		return constant.UnknownPageMessage
 	}
+
+	return s.String()
 }
 
 func main() {
@@ -285,9 +353,16 @@ func main() {
 	}
 
 	p := tea.NewProgram(initialModel())
-	_, err = p.Run()
+	m, err := p.Run()
 	if err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)
 		os.Exit(1)
+	}
+
+	// Close the logger when the program exits
+	if model, ok := m.(model); ok {
+		if err := model.logger.Close(); err != nil {
+			fmt.Printf("Error closing logger: %v\n", err)
+		}
 	}
 }
