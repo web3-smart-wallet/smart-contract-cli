@@ -1,0 +1,21 @@
+.idea
+
+# Node
+node_modules/
+.env
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
+
+# Coverage
+coverage/
+coverage.json
+
+# Go
+/bin
+/pkg
+*.exe
+*.test
+*.out
