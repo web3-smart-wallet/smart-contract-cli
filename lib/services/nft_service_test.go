@@ -71,3 +71,50 @@ func (s *NftServiceTestSuite) TestDeployContract() {
 	s.Require().NotNil(contractAddress)
 	s.Require().NotEmpty(contractAddress)
 }
+
+func (s *NftServiceTestSuite) TestSetURI() {
+	// First deploy the contract
+	abiInfoFile, err := os.ReadFile(AbiPath)
+	if err != nil {
+		s.T().Fatalf("failed to read bytecode: %v", err)
+	}
+
+	var abiInfo AbiInfoFile
+	err = json.Unmarshal(abiInfoFile, &abiInfo)
+	if err != nil {
+		s.T().Fatalf("failed to unmarshal abi info: %v", err)
+	}
+
+	abiBytes, err := json.Marshal(abiInfo.Abi)
+	if err != nil {
+		s.T().Fatalf("failed to marshal abi: %v", err)
+	}
+
+	initialOwner := common.HexToAddress(HardhatAddress)
+
+	// Deploy the contract
+	contractAddress, err := s.NftService.DeployContractWithABI(
+		DeployContractParams{
+			Bytecode:       string(abiInfo.Bytecode),
+			ConstructorABI: string(abiBytes),
+			ConstructorArgs: []any{
+				initialOwner,
+			},
+		},
+	)
+	s.Require().NoError(err)
+	s.Require().NotEmpty(contractAddress)
+
+	// Call setURI function
+	newURI := "https://api.example.com/token/{id}"
+	txHash, err := s.NftService.CallContractFunction(
+		ContractCallParams{
+			ContractAddress: contractAddress,
+			ContractABI:     string(abiBytes),
+			FunctionName:    "setURI",
+			FunctionArgs:    []any{newURI},
+		},
+	)
+	s.Require().NoError(err)
+	s.Require().NotEmpty(txHash)
+}
