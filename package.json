@@ -1,13 +1,16 @@
 {
-  "name": "your-project-name",
+  "name": "smart-contract-cli",
   "version": "1.0.0",
-  "private": true,
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "hardhat test",
-    "node": "hardhat node"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "hardhat": "^2.19.0",
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.18"
   }
-} 
+}

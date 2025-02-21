@@ -30,12 +30,12 @@ jobs:
           version: 10
 
       - name: Install dependencies
-        run: pnpm add -g hardhat
+        run: pnpm i
 
       - name: Start Hardhat node
         run: |
-          nohup pnpm hardhat node &
-          sleep 2
+          nohup pnpm hardhat node --hostname 0.0.0.0 &
+          sleep 5
 
       - name: Run Go tests
         run: go test -v ./...
