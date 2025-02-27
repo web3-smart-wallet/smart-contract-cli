@@ -323,3 +323,28 @@ func (s *NftService) MintNFTToAddresses(contractAddr string, addresses []string,
 	// 调用合约
 	return s.CallContractFunction(params)
 }
+
+// SetURI sets the base URI for all tokens
+func (s *NftService) SetURI(contractAddr string, newURI string) error {
+	params := ContractCallParams{
+		ContractAddress: contractAddr,
+		ContractABI: `[{
+			"inputs": [
+				{"type": "string", "name": "newuri"}
+			],
+			"name": "setURI",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}]`,
+		FunctionName: "setURI",
+		FunctionArgs: []interface{}{
+			newURI,
+		},
+		GasLimit: 300000,
+	}
+
+	// 调用合约
+	_, err := s.CallContractFunction(params)
+	return err
+}

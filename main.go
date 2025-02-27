@@ -74,7 +74,7 @@ const (
 // 在文件开头添加自定义消息类型
 type airdropMsg struct {
 	nftID  string
-	nftURL string
+	nftURI string
 }
 
 // 添加错误消息类型
@@ -95,7 +95,7 @@ type model struct {
 	deployChoices   []string // 部署合约选项
 	deployCursor    int      // 部署合约光标位置
 	nftInput        string   // 输入框内容
-	graphURL        string   // Graph URL输入内容
+	uri             string   // URI输入内容
 	inputMode       string   // 输入模式：'nft' 或 'url'
 	inputCursor     int      // 输入框光标位置
 	password        string   // 用户输入的密码
@@ -131,7 +131,7 @@ func initialModel() model {
 		deployChoices:  constant.DeployMenuChoices,
 		deployCursor:   0,
 		nftInput:       "",
-		graphURL:       "",
+		uri:            "",
 		inputMode:      "nft",
 		inputCursor:    0,
 		password:       "",
@@ -177,7 +177,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case constant.KeyEsc:
 			if m.currentPage != constant.MenuPage {
 				if m.currentPage == constant.AirdropPage && m.inputMode == constant.URLInputMode {
-					m.graphURL = ""
+					m.uri = ""
 					m.inputMode = constant.NFTInputMode
 				} else if m.currentPage == constant.UpLoadPage {
 					m.currentPage = constant.AirdropPage
@@ -204,9 +204,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.currentPage == constant.AirdropPage {
 				if m.inputMode == constant.NFTInputMode && len(m.nftInput) > 0 {
 					m.nftInput = m.nftInput[:len(m.nftInput)-1]
-
-				} else if m.inputMode == constant.URLInputMode && len(m.graphURL) > 0 {
-					m.graphURL = m.graphURL[:len(m.graphURL)-1]
+				} else if m.inputMode == constant.URLInputMode && len(m.uri) > 0 {
+					m.uri = m.uri[:len(m.uri)-1]
 				}
 			} else if m.currentPage == constant.PasswordPage && len(m.password) > 0 {
 				m.password = m.password[:len(m.password)-1]
@@ -252,24 +251,24 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 
 				if m.inputMode == constant.URLInputMode {
-					m.logger.Log("INFO", fmt.Sprintf("graphURL: %s", m.graphURL))
-					if len(m.graphURL) == 0 {
+					m.logger.Log("INFO", fmt.Sprintf("URI: %s", m.uri))
+					if len(m.uri) == 0 {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.EmptyURLError)}
 						}
-					} else if len(m.graphURL) > constant.MaxURLLength {
+					} else if len(m.uri) > constant.MaxURLLength {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.LongURLError)}
 						}
 					}
-					matched, _ := regexp.MatchString(constant.URLPattern, m.graphURL)
+					matched, _ := regexp.MatchString(constant.URLPattern, m.uri)
 					if !matched {
 						return m, func() tea.Msg {
 							return errorMsg{err: fmt.Errorf(constant.InvalidURLError)}
 						}
 					} else {
 						return m, func() tea.Msg {
-							return airdropMsg{nftID: m.nftInput, nftURL: m.graphURL}
+							return airdropMsg{nftID: m.nftInput, nftURI: m.uri}
 						}
 					}
 				}
@@ -320,8 +319,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.nftInput += msg.String()
 					}
 				} else if m.inputMode == constant.URLInputMode {
-
-					m.graphURL += msg.String()
+					m.uri += msg.String()
 				}
 			} else if m.currentPage == constant.PasswordPage {
 				m.password += msg.String()
@@ -360,7 +358,7 @@ func (m model) View() string {
 		view := views.DeployContractView()
 		s.WriteString(view)
 	case constant.AirdropPage:
-		view := views.AirdropView(m.inputMode, m.nftInput, m.graphURL)
+		view := views.AirdropView(m.inputMode, m.nftInput, m.uri)
 		s.WriteString(view)
 	case constant.UpLoadPage:
 		var errorStr string
@@ -419,6 +417,11 @@ func (m model) sendNFTsToAddresses(addresses []string, nftID string) error {
 	contractAddr := os.Getenv("CONTRACT_ADDRESS")
 	if contractAddr == "" {
 		return fmt.Errorf("未设置 CONTRACT_ADDRESS 环境变量")
+	}
+
+	// 设置Token URI
+	if err := m.nftService.SetURI(contractAddr, m.uri); err != nil {
+		return fmt.Errorf("设置 URI 失败: %v", err)
 	}
 
 	// 调用 NFT 服务发送 NFT

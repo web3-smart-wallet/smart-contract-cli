@@ -7,7 +7,7 @@ import (
 )
 
 // AirdropView renders the airdrop page
-func AirdropView(inputMode, nftInput, graphURL string) string {
+func AirdropView(inputMode, nftInput, uri string) string {
 	s := constant.AirdropPageTitle + "\n"
 	s += string(constant.Separator) + "\n\n"
 
@@ -23,9 +23,9 @@ func AirdropView(inputMode, nftInput, graphURL string) string {
 		// s += constant.ExitMessage + "\n"
 	} else {
 		s += fmt.Sprintf("%s%s\n\n", constant.NFTIDLabel, nftInput)
-		s += constant.GraphURLPrompt
-		s += fmt.Sprintf("> %s", graphURL)
-		if len(graphURL) == 0 {
+		s += constant.URIPrompt
+		s += fmt.Sprintf("> %s", uri)
+		if len(uri) == 0 {
 			s += string(constant.InputCursor)
 		}
 		s += "\n\n" + constant.ConfirmAirdrop
