@@ -8,6 +8,7 @@ const (
 	DeployContractPage
 	AirdropPage
 	UpLoadPage
+	ConfirmPage
 	CheckTotalPage
 )
 
