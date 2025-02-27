@@ -13,13 +13,14 @@ func AirdropView(inputMode, nftInput, graphURL string) string {
 
 	if inputMode == constant.NFTInputMode {
 		s += constant.NFTInputPrompt
+		s += fmt.Sprintf("> %s", nftInput)
 		if len(nftInput) == 0 {
 			s += string(constant.InputCursor)
 		}
 		s += "\n\n" + constant.EnterToContinue
 		s += "\n" + constant.BackToMenuMessage + "\n"
 		s += constant.ExitMessage + "\n"
-		s += constant.ExitMessage + "\n"
+		// s += constant.ExitMessage + "\n"
 	} else {
 		s += fmt.Sprintf("%s%s\n\n", constant.NFTIDLabel, nftInput)
 		s += constant.GraphURLPrompt
