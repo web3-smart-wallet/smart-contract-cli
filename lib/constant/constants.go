@@ -1,15 +1,17 @@
 package constant
 
 // PageState constants for different pages
+type Page string
+
 const (
-	PasswordPage = iota
-	MenuPage
-	DeployPage
-	DeployContractPage
-	AirdropPage
-	UpLoadPage
-	ConfirmPage
-	CheckTotalPage
+	PasswordPage       Page = "PasswordPage"
+	MenuPage           Page = "MenuPage"
+	DeployPage         Page = "DeployPage"
+	DeployContractPage Page = "DeployContractPage"
+	AirdropPage        Page = "AirdropPage"
+	UpLoadPage         Page = "UpLoadPage"
+	ConfirmPage        Page = "ConfirmPage"
+	CheckTotalPage     Page = "CheckTotalPage"
 )
 
 // Common constants
