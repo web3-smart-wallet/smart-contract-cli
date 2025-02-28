@@ -1,11 +1,11 @@
-package views
+package password
 
 import (
 	"strings"
 )
 
 // PasswordView renders the password input page
-func PasswordView(password string) string {
+func View(password string) string {
 	s := "请输入密码:\n\n"
 	s += "> " + strings.Repeat("*", len(password))
 	if len(password) == 0 {
