@@ -280,3 +280,71 @@ func (s *NftService) CallContractFunction(params ContractCallParams) (txHash str
 	// Return the transaction hash
 	return receipt.TxHash.Hex(), nil
 }
+
+// MintNFTToAddresses mints NFTs to multiple addresses
+func (s *NftService) MintNFTToAddresses(contractAddr string, addresses []string, nftID string) (string, error) {
+	// 将字符串地址转换为 common.Address 数组
+	recipients := make([]common.Address, len(addresses))
+	for i, addr := range addresses {
+		recipients[i] = common.HexToAddress(addr)
+	}
+
+	// 将 nftID 转换为 big.Int
+	tokenID, ok := new(big.Int).SetString(nftID, 10)
+	if !ok {
+		return "", fmt.Errorf("无效的 NFT ID")
+	}
+
+	// 准备调用参数
+	params := ContractCallParams{
+		ContractAddress: contractAddr,
+		ContractABI: `[{
+			"inputs": [
+				{"type": "address[]", "name": "accounts"},
+				{"type": "uint256", "name": "ids"},
+				{"type": "uint256", "name": "amounts"},
+				{"type": "bytes", "name": "data"}
+			],
+			"name": "mintToMultple",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}]`,
+		FunctionName: "mintToMultple",
+		FunctionArgs: []interface{}{
+			recipients,    // 直接传入 []common.Address
+			tokenID,       // *big.Int
+			big.NewInt(1), // *big.Int
+			[]byte{},      // bytes
+		},
+		GasLimit: 500000, // 增加 gas limit 以处理多个地址
+	}
+
+	// 调用合约
+	return s.CallContractFunction(params)
+}
+
+// SetURI sets the base URI for all tokens
+func (s *NftService) SetURI(contractAddr string, newURI string) error {
+	params := ContractCallParams{
+		ContractAddress: contractAddr,
+		ContractABI: `[{
+			"inputs": [
+				{"type": "string", "name": "newuri"}
+			],
+			"name": "setURI",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}]`,
+		FunctionName: "setURI",
+		FunctionArgs: []interface{}{
+			newURI,
+		},
+		GasLimit: 300000,
+	}
+
+	// 调用合约
+	_, err := s.CallContractFunction(params)
+	return err
+}

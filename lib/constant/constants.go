@@ -8,6 +8,7 @@ const (
 	DeployContractPage
 	AirdropPage
 	UpLoadPage
+	ConfirmPage
 	CheckTotalPage
 )
 
@@ -86,7 +87,7 @@ const (
 
 	// Input prompts
 	NFTInputPrompt = "请输入要空投的 NFT 编号：\n"
-	GraphURLPrompt = "请输入 Graph URL：\n"
+	URIPrompt      = "请输入 URI：\n"
 	NFTIDLabel     = "NFT 编号: "
 
 	// Navigation messages
