@@ -13,7 +13,9 @@ contract MyToken is ERC1155, Ownable {
     uint256[] private _tokenIds;
     mapping(uint256 => uint256) private _tokenIdToAmount;
 
-    constructor(address initialOwner) ERC1155("") Ownable(initialOwner) {}
+    constructor(address initialOwner, string memory newuri) ERC1155("") Ownable(initialOwner) {
+        _setURI(newuri);
+    }
 
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
