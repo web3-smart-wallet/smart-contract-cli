@@ -18,6 +18,7 @@ import (
 // Create a local type that embeds the imported type
 type localModel struct {
 	types.AppModel
+	types.State
 }
 
 func initialModel() localModel {
@@ -35,18 +36,22 @@ func initialModel() localModel {
 	// Create shared services
 	nftService := services.NewNftService(rpcURL, privateKey)
 	passwordService := password.NewService(constant.Password)
+	contractService := services.NewContractCompiler("./artifacts")
 
 	// Create shared models
 	airdropModel := models.NewAirdropModel()
+	deployContractModel := models.NewDeployContractModel()
 
 	// Create controllers
 	passwordController := controllers.NewPasswordController(passwordService)
 	menuController := controllers.NewMenuController(constant.MainMenuChoices)
 	deployController := controllers.NewDeployController(constant.DeployMenuChoices)
+
+	deployContractController := controllers.NewDeployContractController(nftService, contractService, deployContractModel)
 	airdropController := controllers.NewAirdropController(airdropModel, nftService)
 	uploadController := controllers.NewUploadController()
 	confirmController := controllers.NewConfirmController(nftService, contractAddr)
-	checkController := controllers.NewCheckTotalController(nftService, contractAddr)
+	checkController := controllers.NewCheckTotalController(nftService, contractService, contractAddr)
 
 	return localModel{
 		AppModel: types.AppModel{
@@ -57,14 +62,18 @@ func initialModel() localModel {
 			Loading:        false,
 			Logger:         logger,
 			Controllers: map[constant.Page]types.ControllerInterface{
-				constant.PasswordPage:   passwordController,
-				constant.MenuPage:       menuController,
-				constant.DeployPage:     deployController,
-				constant.AirdropPage:    airdropController,
-				constant.UpLoadPage:     uploadController,
-				constant.ConfirmPage:    confirmController,
-				constant.CheckTotalPage: checkController,
+				constant.PasswordPage:       passwordController,
+				constant.MenuPage:           menuController,
+				constant.DeployPage:         deployController,
+				constant.DeployContractPage: deployContractController,
+				constant.AirdropPage:        airdropController,
+				constant.UpLoadPage:         uploadController,
+				constant.ConfirmPage:        confirmController,
+				constant.CheckTotalPage:     checkController,
 			},
+		},
+		State: types.State{
+			UploadWalletAddresses: []string{},
 		},
 	}
 }

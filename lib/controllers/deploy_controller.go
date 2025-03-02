@@ -39,11 +39,23 @@ func (c *DeployController) Update(model types.AppModel, msg tea.Msg) (interface{
 			}
 		case constant.KeyEnter:
 			// Navigate to the selected page
-			if c.cursor == 0 {
-				return model, func() tea.Msg {
-					return types.ChangePageMsg{Page: constant.DeployContractPage}
-				}
+			var nextPage constant.Page
+			// if c.cursor == 0 {
+			// 	return model, func() tea.Msg {
+			// 		return types.ChangePageMsg{Page: constant.DeployContractPage}
+			// 	}
+			// }
+			switch c.cursor {
+			case 0:
+				nextPage = constant.DeployContractPage
+			case 1:
+				nextPage = constant.CheckTotalPage
 			}
+
+			return model, func() tea.Msg {
+				return types.ChangePageMsg{Page: nextPage}
+			}
+
 		case constant.KeyEsc:
 			return model, func() tea.Msg {
 				return types.ChangePageMsg{Page: constant.MenuPage}
