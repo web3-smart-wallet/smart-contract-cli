@@ -24,13 +24,28 @@ func DeployView(deployChoices []string, deployCursor int) string {
 }
 
 // DeployContractView renders the deploy contract page
-func DeployContractView() string {
-	return `
-Mint NFT 页面
---------------
-这里是 Mint NFT 的界面
+func DeployContractView(uri string) string {
+	s := constant.DeployContractPageTitle + "\n" + string(constant.Separator) + "\n\n"
 
-按 ESC 返回主菜单
-按 Ctrl+C 退出程序
-`
+	s += constant.URIPrompt + "\n"
+
+	// if len(uri) > 0 {
+	// 	s += "\n"
+	// }
+
+	// s += string(constant.InputCursor)
+
+	s += fmt.Sprintf("> %s", uri)
+	if len(uri) == 0 {
+		s += string(constant.InputCursor)
+	}
+
+	// if showError {
+	// 	s += "\n\n" + constant.ErrorPrefix + constant.InvalidURLError
+	// }
+
+	s += "\n\n" + constant.BackToMenuMessage + "\n"
+	s += constant.ExitMessage
+
+	return s
 }
