@@ -36,19 +36,22 @@ func initialModel() localModel {
 	// Create shared services
 	nftService := services.NewNftService(rpcURL, privateKey)
 	passwordService := password.NewService(constant.Password)
+	contractService := services.NewContractCompiler("./artifacts")
 
 	// Create shared models
 	airdropModel := models.NewAirdropModel()
+	deployContractModel := models.NewDeployContractModel()
 
 	// Create controllers
 	passwordController := controllers.NewPasswordController(passwordService)
 	menuController := controllers.NewMenuController(constant.MainMenuChoices)
 	deployController := controllers.NewDeployController(constant.DeployMenuChoices)
-	deployContractController := controllers.NewDeployContractController(nftService)
+
+	deployContractController := controllers.NewDeployContractController(nftService, contractService, deployContractModel)
 	airdropController := controllers.NewAirdropController(airdropModel, nftService)
 	uploadController := controllers.NewUploadController()
 	confirmController := controllers.NewConfirmController(nftService, contractAddr)
-	checkController := controllers.NewCheckTotalController(nftService, contractAddr)
+	checkController := controllers.NewCheckTotalController(nftService, contractService, contractAddr)
 
 	return localModel{
 		AppModel: types.AppModel{
