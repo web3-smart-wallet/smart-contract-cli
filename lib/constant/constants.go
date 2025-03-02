@@ -25,7 +25,7 @@ const MaxURLLength = 255  // Maximum URL length
 // Menu options
 var (
 	MainMenuChoices   = []string{"Deploy Contract", "AirDrop NFT", "Check Total NFT"}
-	DeployMenuChoices = []string{"Mint New NFT", "Deploy ERC1155"}
+	DeployMenuChoices = []string{"Deploy new Contract(ERC1155)", "Check Existing Contracts"}
 )
 
 // Input modes
@@ -58,13 +58,14 @@ const (
 	SuccessPrefix = "✅ "
 
 	// Page titles and headers
-	PasswordPageTitle   = "请输入密码:"
-	MenuPageTitle       = "请选择操作:"
-	DeployPageTitle     = "部署合约页面"
-	MintNFTPageTitle    = "Mint NFT 页面"
-	AirdropPageTitle    = "空投 NFT 页面"
-	UploadPageTitle     = "上传文件页面"
-	CheckTotalPageTitle = "查看 NFT 总量页面"
+	PasswordPageTitle       = "请输入密码:"
+	MenuPageTitle           = "请选择操作:"
+	DeployPageTitle         = "部署合约页面"
+	MintNFTPageTitle        = "Mint NFT 页面"
+	AirdropPageTitle        = "空投 NFT 页面"
+	UploadPageTitle         = "上传文件页面"
+	CheckTotalPageTitle     = "查看 NFT 总量页面"
+	DeployContractPageTitle = "部署新合约"
 
 	// Common UI elements
 	MainMenuFooter    = "主菜单."

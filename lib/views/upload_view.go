@@ -22,14 +22,35 @@ func UploadView(filePath string, errorMsg string) string {
 	return sb.String()
 }
 
-// 添加确认页面的视图函数
-func ConfirmView(addressCount int) string {
+// ConfirmView renders the confirmation page
+func ConfirmView(addresses []string) string {
 	var sb strings.Builder
 
 	sb.WriteString("\n=== 确认发送 NFT ===\n\n")
-	sb.WriteString(fmt.Sprintf("即将向 %d 个地址发送 NFT\n\n", addressCount))
+	sb.WriteString(fmt.Sprintf("即将向 %d 个地址发送 NFT\n\n", len(addresses)))
+
+	// 显示前5个地址作为预览
+	if len(addresses) > 0 {
+		sb.WriteString("地址预览：\n")
+		previewCount := min(5, len(addresses))
+		for i := 0; i < previewCount; i++ {
+			sb.WriteString(fmt.Sprintf("%d. %s\n", i+1, addresses[i]))
+		}
+		if len(addresses) > 5 {
+			sb.WriteString("...\n")
+		}
+		sb.WriteString("\n")
+	}
+
 	sb.WriteString("按 Enter 确认发送\n")
 	sb.WriteString("按 ESC 取消操作\n")
 
 	return sb.String()
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

@@ -22,6 +22,12 @@ type AppModel struct {
 	SuccessMessage string
 	Loading        bool
 	Logger         *Logger
-
-	Controllers map[constant.Page]ControllerInterface
+	Controllers    map[constant.Page]ControllerInterface
 }
+
+type State struct {
+	UploadWalletAddresses []string
+}
+
+// 上传地址
+//model.state.uploadurl = "https://www.baidu.com"
