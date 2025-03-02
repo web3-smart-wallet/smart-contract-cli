@@ -31,6 +31,9 @@ type DeployContractParams struct {
 	GasLimit uint64
 	// Optional value to send with deployment (if not set, 0 will be used)
 	Value *big.Int
+	// 添加新字段
+	InitialURI   string
+	InitialOwner string
 }
 
 // ContractCallParams contains all parameters needed for contract function calls
@@ -124,6 +127,26 @@ func (s *NftService) DeployContractWithABI(params DeployContractParams) (contrac
 
 	// Decode the bytecode
 	decodedBytecode := common.FromHex(params.Bytecode)
+
+	// 获取部署者地址作为默认的 initialOwner（如果未指定）
+	if params.InitialOwner == "" {
+		params.InitialOwner = fromAddress.Hex()
+	}
+
+	// 设置构造函数参数
+	params.ConstructorABI = `[{
+		"inputs": [
+			{"name": "initialOwner", "type": "address"},
+			{"name": "newuri", "type": "string"}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}]`
+
+	params.ConstructorArgs = []interface{}{
+		common.HexToAddress(params.InitialOwner),
+		params.InitialURI,
+	}
 
 	// If we have constructor arguments, encode them and append to bytecode
 	if len(params.ConstructorArgs) > 0 {
