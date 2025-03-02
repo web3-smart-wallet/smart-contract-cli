@@ -25,7 +25,7 @@ const MaxURLLength = 255  // Maximum URL length
 // Menu options
 var (
 	MainMenuChoices   = []string{"Deploy Contract", "AirDrop NFT", "Check Total NFT"}
-	DeployMenuChoices = []string{"Mint New NFT", "Deploy ERC1155"}
+	DeployMenuChoices = []string{"Deploy new Contract(ERC1155)", "Check Existing Contracts"}
 )
 
 // Input modes

@@ -18,6 +18,7 @@ import (
 // Create a local type that embeds the imported type
 type localModel struct {
 	types.AppModel
+	types.State
 }
 
 func initialModel() localModel {
@@ -43,6 +44,7 @@ func initialModel() localModel {
 	passwordController := controllers.NewPasswordController(passwordService)
 	menuController := controllers.NewMenuController(constant.MainMenuChoices)
 	deployController := controllers.NewDeployController(constant.DeployMenuChoices)
+	deployContractController := controllers.NewDeployContractController(nftService)
 	airdropController := controllers.NewAirdropController(airdropModel, nftService)
 	uploadController := controllers.NewUploadController()
 	confirmController := controllers.NewConfirmController(nftService, contractAddr)
@@ -57,14 +59,18 @@ func initialModel() localModel {
 			Loading:        false,
 			Logger:         logger,
 			Controllers: map[constant.Page]types.ControllerInterface{
-				constant.PasswordPage:   passwordController,
-				constant.MenuPage:       menuController,
-				constant.DeployPage:     deployController,
-				constant.AirdropPage:    airdropController,
-				constant.UpLoadPage:     uploadController,
-				constant.ConfirmPage:    confirmController,
-				constant.CheckTotalPage: checkController,
+				constant.PasswordPage:       passwordController,
+				constant.MenuPage:           menuController,
+				constant.DeployPage:         deployController,
+				constant.DeployContractPage: deployContractController,
+				constant.AirdropPage:        airdropController,
+				constant.UpLoadPage:         uploadController,
+				constant.ConfirmPage:        confirmController,
+				constant.CheckTotalPage:     checkController,
 			},
+		},
+		State: types.State{
+			UploadWalletAddresses: []string{},
 		},
 	}
 }
