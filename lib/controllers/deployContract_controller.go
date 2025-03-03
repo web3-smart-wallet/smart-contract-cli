@@ -20,7 +20,12 @@ type DeployContractController struct {
 }
 
 // NewDeployContractController creates a new deploy contract controller
-func NewDeployContractController(nftService *services.NftService, contractCompiler *services.ContractCompiler, model *models.DeployContractModel) *DeployContractController {
+func NewDeployContractController(
+	nftService *services.NftService,
+	contractCompiler *services.ContractCompiler,
+	model *models.DeployContractModel,
+
+) *DeployContractController {
 	return &DeployContractController{
 		nftService:       nftService,
 		contractCompiler: contractCompiler,
@@ -56,6 +61,7 @@ func (c *DeployContractController) Update(model types.AppModel, msg tea.Msg) (in
 					return types.ErrorMsg{Err: fmt.Errorf(constant.InvalidURLError)}
 				}
 			} else {
+
 				// 获取合约字节码和ABI
 				bytecode, abi, err := c.contractCompiler.GetContractBytecode()
 				if err != nil {
@@ -82,7 +88,7 @@ func (c *DeployContractController) Update(model types.AppModel, msg tea.Msg) (in
 				}
 
 				// 保存合约信息
-				err = c.contractCompiler.SaveDeployedContract(contractAddr, abi)
+				err = c.contractCompiler.SaveDeployedContract(contractAddr, c.model.URI, abi)
 				if err != nil {
 					// 记录错误但不中断流程
 					model.Logger.Log("ERROR", fmt.Sprintf("保存合约信息失败: %v", err))
