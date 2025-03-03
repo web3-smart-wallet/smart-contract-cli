@@ -86,7 +86,7 @@ func (c *ConfirmController) Update(model types.AppModel, msg tea.Msg) (interface
 
 // View renders the confirm page
 func (c *ConfirmController) View() string {
-	return views.ConfirmView(c.walletAddresses)
+	return views.ConfirmView(types.GlobalState.UploadWalletAddresses)
 }
 
 func (c *ConfirmController) Name() constant.Page {
