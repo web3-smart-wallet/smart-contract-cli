@@ -4,6 +4,8 @@ go 1.23.4
 
 require (
 	github.com/charmbracelet/bubbletea v1.3.3
+	github.com/charmbracelet/lipgloss v1.0.0
+	github.com/charmbracelet/x/exp/teatest v0.0.0-20250303111204-ce812b082f54
 	github.com/ethereum/go-ethereum v1.15.2
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
@@ -13,9 +15,10 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
+	github.com/aymanbagabas/go-udiff v0.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.17.0 // indirect
-	github.com/charmbracelet/lipgloss v1.0.0 // indirect
 	github.com/charmbracelet/x/ansi v0.8.0 // indirect
+	github.com/charmbracelet/x/exp/golden v0.0.0-20240806155701-69247e0abc2a // indirect
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/consensys/bavard v0.1.22 // indirect
 	github.com/consensys/gnark-crypto v0.14.0 // indirect
