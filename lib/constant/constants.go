@@ -17,7 +17,6 @@ const (
 
 // Common constants
 // URL validation pattern
-var Password = ""
 
 const URLPattern = `^(http|https)://[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=]+$`
 const MaxNFTIDLength = 10 // Maximum NFT ID length
