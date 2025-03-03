@@ -48,10 +48,13 @@ func initialModel() localModel {
 	deployController := controllers.NewDeployController(constant.DeployMenuChoices)
 
 	deployContractController := controllers.NewDeployContractController(nftService, contractService, deployContractModel)
+	selectContractController := controllers.NewSelectContractController(contractService)
 	airdropController := controllers.NewAirdropController(airdropModel, nftService)
 	uploadController := controllers.NewUploadController()
 	confirmController := controllers.NewConfirmController(nftService, contractAddr)
 	checkController := controllers.NewCheckTotalController(nftService, contractService, contractAddr)
+
+	// 添加合约选择控制器
 
 	return localModel{
 		AppModel: types.AppModel{
@@ -66,6 +69,7 @@ func initialModel() localModel {
 				constant.MenuPage:           menuController,
 				constant.DeployPage:         deployController,
 				constant.DeployContractPage: deployContractController,
+				constant.SelectContractPage: selectContractController,
 				constant.AirdropPage:        airdropController,
 				constant.UpLoadPage:         uploadController,
 				constant.ConfirmPage:        confirmController,
@@ -74,6 +78,7 @@ func initialModel() localModel {
 		},
 		State: types.State{
 			UploadWalletAddresses: []string{},
+			SelectedContract:      "", // 添加选中的合约地址
 		},
 	}
 }

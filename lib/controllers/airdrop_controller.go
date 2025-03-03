@@ -57,10 +57,13 @@ func (c *AirdropController) Update(model types.AppModel, msg tea.Msg) (interface
 			}
 
 			if c.model.InputMode == constant.URLInputMode {
+
 				if len(c.model.URI) == 0 {
-					return model, func() tea.Msg {
-						return types.ErrorMsg{Err: fmt.Errorf(constant.EmptyURLError)}
-					}
+					// return model, func() tea.Msg {
+					// 	return types.ErrorMsg{Err: fmt.Errorf(constant.EmptyURLError)}
+					// }
+					c.model.URI = types.GlobalState.TokenURI
+
 				} else if len(c.model.URI) > constant.MaxURLLength {
 					return model, func() tea.Msg {
 						return types.ErrorMsg{Err: fmt.Errorf(constant.LongURLError)}
@@ -72,6 +75,7 @@ func (c *AirdropController) Update(model types.AppModel, msg tea.Msg) (interface
 						return types.ErrorMsg{Err: fmt.Errorf(constant.InvalidURLError)}
 					}
 				} else {
+					types.GlobalState.TokenURI = c.model.URI
 					return model, func() tea.Msg {
 						return types.ChangePageMsg{Page: constant.UpLoadPage}
 					}
@@ -84,7 +88,7 @@ func (c *AirdropController) Update(model types.AppModel, msg tea.Msg) (interface
 				return model, nil
 			}
 			return model, func() tea.Msg {
-				return types.ChangePageMsg{Page: constant.MenuPage}
+				return types.ChangePageMsg{Page: constant.SelectContractPage}
 			}
 		default:
 			if c.model.InputMode == constant.NFTInputMode {
@@ -94,6 +98,7 @@ func (c *AirdropController) Update(model types.AppModel, msg tea.Msg) (interface
 				}
 			} else if c.model.InputMode == constant.URLInputMode {
 				c.model.URI += msg.String()
+
 			}
 		}
 	}

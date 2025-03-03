@@ -27,7 +27,15 @@ type AppModel struct {
 
 type State struct {
 	UploadWalletAddresses []string
+	SelectedContract      string
+	TokenURI              string
 }
 
+var GlobalState = &State{}
+
 // 上传地址
-//model.state.uploadurl = "https://www.baidu.com"
+// model.state.uploadurl = "https://www.baidu.com"
+type ContractChoice struct {
+	Address    string
+	DeployTime string
+}

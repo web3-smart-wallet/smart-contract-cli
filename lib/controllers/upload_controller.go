@@ -97,10 +97,10 @@ func (c *UploadController) parseWalletAddresses(filePath string) ([]string, erro
 			return nil, fmt.Errorf("第 %d 行包含无效的以太坊地址: %s", i+1, line)
 		}
 
-		addresses = append(addresses, line)
+		types.GlobalState.UploadWalletAddresses = append(types.GlobalState.UploadWalletAddresses, line)
 	}
 
-	if len(addresses) == 0 {
+	if len(types.GlobalState.UploadWalletAddresses) == 0 {
 		return nil, fmt.Errorf("文件中没有找到有效的钱包地址")
 	}
 

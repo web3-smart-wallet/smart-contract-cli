@@ -40,7 +40,7 @@ func (c *CheckTotalController) Update(model types.AppModel, msg tea.Msg) (interf
 		switch key {
 		case constant.KeyEsc:
 			return model, func() tea.Msg {
-				return types.ChangePageMsg{Page: constant.MenuPage}
+				return types.ChangePageMsg{Page: constant.DeployPage}
 			}
 		}
 	}

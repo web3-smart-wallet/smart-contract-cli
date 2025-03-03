@@ -37,13 +37,12 @@ func (c *MenuController) Update(model types.AppModel, msg tea.Msg) (interface{},
 				c.cursor++
 			}
 		case constant.KeyEnter:
-			// Navigate to the selected page
 			var nextPage constant.Page
 			switch c.cursor {
 			case 0:
 				nextPage = constant.DeployPage
 			case 1:
-				nextPage = constant.AirdropPage
+				nextPage = constant.SelectContractPage
 			case 2:
 				nextPage = constant.CheckTotalPage
 			}

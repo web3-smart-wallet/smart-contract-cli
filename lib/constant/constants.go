@@ -12,6 +12,7 @@ const (
 	UpLoadPage         Page = "UpLoadPage"
 	ConfirmPage        Page = "ConfirmPage"
 	CheckTotalPage     Page = "CheckTotalPage"
+	SelectContractPage Page = "SelectContractPage"
 )
 
 // Common constants
@@ -58,14 +59,15 @@ const (
 	SuccessPrefix = "✅ "
 
 	// Page titles and headers
-	PasswordPageTitle       = "请输入密码:"
-	MenuPageTitle           = "请选择操作:"
-	DeployPageTitle         = "部署合约页面"
-	MintNFTPageTitle        = "Mint NFT 页面"
-	AirdropPageTitle        = "空投 NFT 页面"
-	UploadPageTitle         = "上传文件页面"
-	CheckTotalPageTitle     = "查看 NFT 总量页面"
-	DeployContractPageTitle = "部署新合约"
+	PasswordPageTitle         = "请输入密码:"
+	MenuPageTitle             = "请选择操作:"
+	DeployPageTitle           = "部署合约页面"
+	MintNFTPageTitle          = "Mint NFT 页面"
+	AirdropPageTitle          = "空投 NFT 页面"
+	UploadPageTitle           = "上传文件页面"
+	CheckTotalPageTitle       = "查看 NFT 总量页面"
+	DeployContractPageTitle   = "部署新合约"
+	DeployedContractPageTitle = "已部署的合约页面"
 
 	// Common UI elements
 	MainMenuFooter    = "主菜单."
@@ -81,6 +83,7 @@ const (
 	InvalidURLError    = "无效的 URL 格式"
 	WrongPasswordError = "密码错误"
 	LoginSuccess       = "登录成功！"
+	NoDeployedContract = "暂无已部署的合约"
 )
 
 // UI Messages - Additional

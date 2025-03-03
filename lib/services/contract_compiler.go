@@ -15,6 +15,7 @@ type ContractArtifact struct {
 
 type DeployedContract struct {
 	Address    string    `json:"address"`
+	TokenURI   string    `json:"tokenURI"`
 	Abi        string    `json:"abi"`
 	DeployTime time.Time `json:"deploy_time"`
 }
@@ -56,7 +57,7 @@ func (c *ContractCompiler) GetContractBytecode() (string, string, error) {
 }
 
 // SaveDeployedContract 保存已部署的合约信息
-func (c *ContractCompiler) SaveDeployedContract(address string, abi string) error {
+func (c *ContractCompiler) SaveDeployedContract(address string, tokenURI string, abi string) error {
 	deployedFile := "deployed_contracts.json"
 	var deployedContracts DeployedContracts
 
@@ -75,6 +76,7 @@ func (c *ContractCompiler) SaveDeployedContract(address string, abi string) erro
 	// 添加新部署的合约信息
 	newContract := DeployedContract{
 		Address:    address,
+		TokenURI:   tokenURI,
 		Abi:        abi,
 		DeployTime: time.Now(),
 	}
