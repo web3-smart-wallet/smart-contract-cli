@@ -20,10 +20,10 @@ type ConfirmController struct {
 }
 
 // NewConfirmController creates a new confirm controller
-func NewConfirmController(nftService *services.NftService, contractAddress string) *ConfirmController {
+func NewConfirmController(nftService *services.NftService) *ConfirmController {
 	return &ConfirmController{
 		nftService:      nftService,
-		contractAddress: contractAddress,
+		contractAddress: "",
 		walletAddresses: []string{},
 		nftID:           "",
 		uri:             "",
