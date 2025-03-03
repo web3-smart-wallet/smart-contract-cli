@@ -20,3 +20,5 @@ coverage.json
 *.test
 *.out
 logs
+deployed_contracts.json
+contracts/MyToken.json
