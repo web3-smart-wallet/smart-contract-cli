@@ -14,19 +14,16 @@ import (
 type CheckTotalController struct {
 	nftService       *services.NftService
 	contractCompiler *services.ContractCompiler
-	contractAddress  string
 }
 
 // NewCheckTotalController creates a new check total controller
 func NewCheckTotalController(
 	nftService *services.NftService,
 	contractCompiler *services.ContractCompiler,
-	contractAddress string,
 ) *CheckTotalController {
 	return &CheckTotalController{
 		nftService:       nftService,
 		contractCompiler: contractCompiler,
-		contractAddress:  contractAddress,
 	}
 }
 
@@ -40,7 +37,7 @@ func (c *CheckTotalController) Update(model types.AppModel, msg tea.Msg) (interf
 		switch key {
 		case constant.KeyEsc:
 			return model, func() tea.Msg {
-				return types.ChangePageMsg{Page: constant.MenuPage}
+				return types.ChangePageMsg{Page: constant.DeployPage}
 			}
 		}
 	}

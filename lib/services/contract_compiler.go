@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -15,12 +16,21 @@ type ContractArtifact struct {
 
 type DeployedContract struct {
 	Address    string    `json:"address"`
+	TokenURI   string    `json:"tokenURI"`
 	Abi        string    `json:"abi"`
 	DeployTime time.Time `json:"deploy_time"`
 }
 
 type DeployedContracts struct {
 	Contracts []DeployedContract `json:"contracts"`
+}
+
+// AvailableContract represents a contract that can be deployed
+type AvailableContract struct {
+	ContractName string
+	FilePath     string
+	Bytecode     string
+	ABI          string
 }
 
 type ContractCompiler struct {
@@ -56,7 +66,7 @@ func (c *ContractCompiler) GetContractBytecode() (string, string, error) {
 }
 
 // SaveDeployedContract 保存已部署的合约信息
-func (c *ContractCompiler) SaveDeployedContract(address string, abi string) error {
+func (c *ContractCompiler) SaveDeployedContract(address string, tokenURI string, abi string) error {
 	deployedFile := "deployed_contracts.json"
 	var deployedContracts DeployedContracts
 
@@ -75,6 +85,7 @@ func (c *ContractCompiler) SaveDeployedContract(address string, abi string) erro
 	// 添加新部署的合约信息
 	newContract := DeployedContract{
 		Address:    address,
+		TokenURI:   tokenURI,
 		Abi:        abi,
 		DeployTime: time.Now(),
 	}
@@ -128,4 +139,75 @@ func (c *ContractCompiler) GetLatestDeployedContract() (*DeployedContract, error
 
 	// 返回最后一个部署的合约
 	return &contracts[len(contracts)-1], nil
+}
+
+// GetAvailableContracts reads all contract JSON files from the contracts directory
+func (c *ContractCompiler) GetAvailableContracts() ([]AvailableContract, error) {
+	// First try current directory
+	contractsDir := "contracts"
+	fmt.Printf("Debug: Looking for contracts in current directory: %s\n", contractsDir)
+
+	// If not found in current directory, try executable path
+	if _, err := os.Stat(contractsDir); os.IsNotExist(err) {
+		exePath, err := os.Executable()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get executable path: %v", err)
+		}
+		fmt.Printf("Debug: Executable path: %s\n", exePath)
+		contractsDir = filepath.Join(filepath.Dir(exePath), "contracts")
+		fmt.Printf("Debug: Contracts not found in current directory, trying executable path: %s\n", contractsDir)
+	}
+
+	// Read all .json files in the contracts directory
+	files, err := os.ReadDir(contractsDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read contracts directory: %v", err)
+	}
+
+	fmt.Printf("Debug: Found %d files in contracts directory\n", len(files))
+
+	var contracts []AvailableContract
+	for _, file := range files {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".json") {
+			filePath := filepath.Join(contractsDir, file.Name())
+			fmt.Printf("Debug: Processing contract file: %s\n", filePath)
+
+			// Read and parse the JSON file
+			data, err := os.ReadFile(filePath)
+			if err != nil {
+				fmt.Printf("Debug: Failed to read file %s: %v\n", filePath, err)
+				continue
+			}
+
+			var contractData struct {
+				ContractName string          `json:"contractName"`
+				Bytecode     string          `json:"bytecode"`
+				Abi          json.RawMessage `json:"abi"`
+			}
+
+			if err := json.Unmarshal(data, &contractData); err != nil {
+				fmt.Printf("Debug: Failed to parse JSON from file %s: %v\n", filePath, err)
+				continue
+			}
+
+			if contractData.ContractName == "" {
+				fmt.Printf("Debug: Contract name is empty in file %s\n", filePath)
+				continue
+			}
+
+			// Convert ABI to string
+			abiString := string(contractData.Abi)
+
+			contracts = append(contracts, AvailableContract{
+				ContractName: contractData.ContractName,
+				FilePath:     filePath,
+				Bytecode:     contractData.Bytecode,
+				ABI:          abiString,
+			})
+			fmt.Printf("Debug: Successfully added contract: %s from %s\n", contractData.ContractName, filePath)
+		}
+	}
+
+	fmt.Printf("Debug: Returning %d available contracts\n", len(contracts))
+	return contracts, nil
 }

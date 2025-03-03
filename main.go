@@ -31,7 +31,11 @@ func initialModel() localModel {
 	// Get configuration from environment variables
 	rpcURL := os.Getenv("RPC_URL")
 	privateKey := os.Getenv("PRIVATE_KEY")
-	contractAddr := os.Getenv("CONTRACT_ADDRESS")
+
+	if rpcURL == "" || privateKey == "" {
+		fmt.Println("RPC_URL or PRIVATE_KEY is not set, please set it in the .env file")
+		os.Exit(1)
+	}
 
 	// Create shared services
 	nftService := services.NewNftService(rpcURL, privateKey)
@@ -48,10 +52,13 @@ func initialModel() localModel {
 	deployController := controllers.NewDeployController(constant.DeployMenuChoices)
 
 	deployContractController := controllers.NewDeployContractController(nftService, contractService, deployContractModel)
+	selectContractController := controllers.NewSelectContractController(contractService)
 	airdropController := controllers.NewAirdropController(airdropModel, nftService)
 	uploadController := controllers.NewUploadController()
-	confirmController := controllers.NewConfirmController(nftService, contractAddr)
-	checkController := controllers.NewCheckTotalController(nftService, contractService, contractAddr)
+	confirmController := controllers.NewConfirmController(nftService)
+	checkController := controllers.NewCheckTotalController(nftService, contractService)
+
+	// 添加合约选择控制器
 
 	return localModel{
 		AppModel: types.AppModel{
@@ -66,6 +73,7 @@ func initialModel() localModel {
 				constant.MenuPage:           menuController,
 				constant.DeployPage:         deployController,
 				constant.DeployContractPage: deployContractController,
+				constant.SelectContractPage: selectContractController,
 				constant.AirdropPage:        airdropController,
 				constant.UpLoadPage:         uploadController,
 				constant.ConfirmPage:        confirmController,
@@ -74,6 +82,7 @@ func initialModel() localModel {
 		},
 		State: types.State{
 			UploadWalletAddresses: []string{},
+			SelectedContract:      "", // 添加选中的合约地址
 		},
 	}
 }
