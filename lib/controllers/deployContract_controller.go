@@ -51,6 +51,15 @@ func (c *DeployContractController) Update(model types.AppModel, msg tea.Msg) (in
 
 		switch key {
 		case constant.KeyEsc:
+
+			// 如果成功部署了合约，则直接返回菜单页面
+			if types.GlobalState.DeployStat {
+				types.GlobalState.DeployStat = false
+				return model, func() tea.Msg {
+					return types.ChangePageMsg{Page: constant.MenuPage}
+				}
+			}
+
 			return model, func() tea.Msg {
 				return types.ChangePageMsg{Page: constant.DeployPage}
 			}
@@ -106,12 +115,18 @@ func (c *DeployContractController) Update(model types.AppModel, msg tea.Msg) (in
 				}
 			}
 
+			// 更新全局状态中的SelectedContract，使其他视图可以立即使用新部署的合约
+			// types.GlobalState.SelectedContract = contractAddr
+			types.GlobalState.DeployStat = true
+			types.GlobalState.TokenURI = c.model.URI
+
 			// Set success message
 			model.SuccessMessage = fmt.Sprintf("合约部署成功！地址: %s", contractAddr)
 
-			return model, func() tea.Msg {
-				return types.ChangePageMsg{Page: constant.MenuPage}
-			}
+			// return model, func() tea.Msg {
+			// 	// 部署成功后可以直接进入空投页面
+			// 	return types.ChangePageMsg{Page: constant.AirdropPage}
+			// }
 
 		case constant.KeyBackspace:
 			if !c.model.IsSelectingContract && len(c.model.URI) > 0 {
