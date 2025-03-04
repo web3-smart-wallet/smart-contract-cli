@@ -76,6 +76,7 @@ func (c *AirdropController) Update(model types.AppModel, msg tea.Msg) (interface
 					}
 				} else {
 					types.GlobalState.TokenURI = c.model.URI
+					types.GlobalState.NFTID = c.model.NFTInput
 					return model, func() tea.Msg {
 						return types.ChangePageMsg{Page: constant.UpLoadPage}
 					}
