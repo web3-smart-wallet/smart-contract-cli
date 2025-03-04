@@ -313,9 +313,15 @@ func (s *NftService) MintNFTToAddresses(contractAddr string, addresses []string,
 	}
 
 	// 将 nftID 转换为 big.Int
-	tokenID, ok := new(big.Int).SetString(nftID, 10)
+	// 去除可能的空格
+	trimmedNftID := strings.TrimSpace(nftID)
+	if trimmedNftID == "" {
+		return "", fmt.Errorf("NFT ID不能为空")
+	}
+
+	tokenID, ok := new(big.Int).SetString(trimmedNftID, 10)
 	if !ok {
-		return "", fmt.Errorf("无效的 NFT ID")
+		return "", fmt.Errorf("无效的 NFT ID: %s", trimmedNftID)
 	}
 
 	// 准备调用参数
