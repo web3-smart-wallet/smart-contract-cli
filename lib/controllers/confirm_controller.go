@@ -47,6 +47,11 @@ func (c *ConfirmController) SetURI(uri string) {
 
 // Update handles the confirm page updates
 func (c *ConfirmController) Update(model types.AppModel, msg tea.Msg) (interface{}, tea.Cmd) {
+	// 从GlobalState获取必要的值
+	c.contractAddress = types.GlobalState.SelectedContract
+	c.walletAddresses = types.GlobalState.UploadWalletAddresses
+	c.nftID = types.GlobalState.NFTID
+	c.uri = types.GlobalState.TokenURI
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -71,9 +76,14 @@ func (c *ConfirmController) Update(model types.AppModel, msg tea.Msg) (interface
 
 			model.Logger.Log("INFO", fmt.Sprintf("NFT 发送成功，交易哈希: %s", txHash))
 
+			// 添加成功消息
+			successMsg := fmt.Sprintf("NFT 发送成功！交易哈希: %s", txHash)
+			types.GlobalState.SendNFTStat = true
+
 			return model, func() tea.Msg {
-				return types.ChangePageMsg{Page: constant.MenuPage}
+				return types.SuccessMsg{Message: successMsg}
 			}
+
 		case constant.KeyEsc:
 			return model, func() tea.Msg {
 				return types.ChangePageMsg{Page: constant.MenuPage}
