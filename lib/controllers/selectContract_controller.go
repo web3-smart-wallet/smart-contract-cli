@@ -109,6 +109,24 @@ func (c *SelectContractController) Update(model types.AppModel, msg tea.Msg) (in
 
 // View renders the menu page
 func (c *SelectContractController) View() string {
+	// 在每次渲染视图时重新读取已部署的合约信息
+	contracts, err := c.contractService.GetDeployedContracts()
+	if err == nil {
+		// 更新合约选择列表
+		c.choices = []types.ContractChoice{}
+		for _, contract := range contracts {
+			c.choices = append(c.choices, types.ContractChoice{
+				Address:    contract.Address,
+				DeployTime: contract.DeployTime.Format("2006-01-02 15:04:05"),
+			})
+		}
+
+		// 确保光标位置有效
+		if len(c.choices) > 0 && c.cursor >= len(c.choices) {
+			c.cursor = len(c.choices) - 1
+		}
+	}
+
 	return views.SelectContractView(c.choices, c.cursor)
 }
 
