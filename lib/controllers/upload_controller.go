@@ -82,7 +82,9 @@ func (c *UploadController) parseWalletAddresses(filePath string) ([]string, erro
 	}
 
 	lines := strings.Split(string(content), "\n")
-	var addresses []string
+
+	// 清空之前的地址列表，避免重复
+	types.GlobalState.UploadWalletAddresses = []string{}
 
 	// Ethereum address regex
 	ethAddressRegex := regexp.MustCompile(`^0x[0-9a-fA-F]{40}$`)
@@ -104,7 +106,7 @@ func (c *UploadController) parseWalletAddresses(filePath string) ([]string, erro
 		return nil, fmt.Errorf("文件中没有找到有效的钱包地址")
 	}
 
-	return addresses, nil
+	return types.GlobalState.UploadWalletAddresses, nil
 }
 
 func (c *UploadController) Name() constant.Page {

@@ -5,6 +5,7 @@ import (
 
 	constant "github.com/web3-smart-wallet/smart-contract-cli/lib/constant"
 	"github.com/web3-smart-wallet/smart-contract-cli/lib/models"
+	"github.com/web3-smart-wallet/smart-contract-cli/lib/types"
 )
 
 // DeployView renders the deploy menu page
@@ -50,8 +51,12 @@ func DeployContractView(model *models.DeployContractModel) string {
 			s += string(constant.InputCursor)
 		}
 	}
+	if types.GlobalState.DeployStat {
+		s += "\n\n" + constant.BackToMenuMessage + "\n"
+	} else {
+		s += "\n\n" + constant.BackToPrevious + "\n"
+	}
 
-	s += "\n\n" + constant.BackToMenuMessage + "\n"
 	s += constant.ExitMessage
 
 	return s

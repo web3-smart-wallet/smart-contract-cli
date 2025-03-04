@@ -28,7 +28,10 @@ type AppModel struct {
 type State struct {
 	UploadWalletAddresses []string
 	SelectedContract      string
+	DeployStat            bool
 	TokenURI              string
+	NFTID                 string
+	SendNFTStat           bool
 }
 
 var GlobalState = &State{}
